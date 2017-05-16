@@ -83,5 +83,29 @@ class Script:
 
         #print (self.universes)
 
+    def reset(self): #Reset the script so it is ready to run again
+        self.universes = []
+        for i in self.sizes:
+            self.universes.append([0]*i)
+
+        tstart = 99999999999999
+        tstop = 0
+
+        for i in self.instructions:
+
+            if i.start_time < tstart:
+                tstart = i.start_time
+
+            if i.stop_time > tstop:
+                tstop = i.stop_time
+
+        t = tstop-tstart
+
+        for i in self.instructions:
+            i.done = False
+            i.started = False
+            i.start_time += t
+            i.stop_time += t
+
     def __str__(self):
      return "Script. Number of instructions: {}".format(len(self.instructions))

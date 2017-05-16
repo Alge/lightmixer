@@ -22,7 +22,7 @@ class Mixer:
     def __init__(self, universes, universe_size = 513, fps = 60):
         self.num_universes = universes
         self.universe_size = universe_size
-
+        self.fps = fps
         self.universes = self.create_universes()
 
     def create_universes(self):
@@ -51,6 +51,17 @@ class Mixer:
 
         for script in self.script_list:
                 script.tick(current_time=self.current_time)
+                if script.done:
+                    print("Script: {} done".format(script))
+                    if script.repetitions > 1:
+                        print("Script: {} restarted".format(script))
+                        script.reset()
+                        script.repetitions -= 1
+                    else:
+                        print("Script: {} removed".format(script))
+                        self.script_list.remove(script)
+
+
 
 
     def copy_scripts(self):
@@ -81,6 +92,7 @@ class Mixer:
             self.run_scripts()
             self.copy_scripts()
             self.update_clients()
-
             #Sleep the rest of the time (16 -> ~60fps, 25 -> ~40fps)
-            sleep(abs((16-(current_milli_time()-self.current_time))/1000))
+            sleeptime = ((1000/self.fps)-(current_milli_time()-self.current_time))/1000
+            if sleeptime > 0:
+                sleep(sleeptime)

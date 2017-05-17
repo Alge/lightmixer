@@ -2,12 +2,12 @@ import socket
 
 class Network:
 
-    instruction_buffer_size = 100000
+    instruction_buffer_size = 1000
 
     def __init__(self, instruction_port = 10000, instruction_IP = "127.0.0.1"):
 
         self.instruction_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.instruction_socket.bind(("127.0.0.1", 10000))
+        self.instruction_socket.bind(("127.0.0.1", 9000))
 
     def instruction_listener(self):
 
@@ -15,14 +15,18 @@ class Network:
         print("started listening on instruction socket")
 
         while 1:
-            conn, addr = self.instruction_socket.accept()
-            print("Connection from: {}".format(addr))
-            while 1:
-                data = conn.recv(self.instruction_buffer_size)
-                if not data: break #no data :/
-                print("recieved data: {}".format(data))
-                conn.send(data)
-            conn.close()
+
+            try:
+                conn, addr = self.instruction_socket.accept()
+                print("Connection from: {}".format(addr))
+                while 1:
+                    data = conn.recv(self.instruction_buffer_size)
+                    if not data: break #no data :/
+                    print("recieved data: {}".format(data))
+                    conn.send(data)
+                conn.close()
+            except Exception as e:
+                print(e)
 
 n = Network()
 n.instruction_listener()

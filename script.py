@@ -42,13 +42,13 @@ class Script:
     def runInstructions(self, current_time):
         self.done = True
         for i in self.instructions:
-            if not i.done and i.stop_time<current_time:
+            if not i.done and i.stop_time<current_time: #If not done and should have stopped
                 i.done = True
                 i.value = i.color
                 #print("instruction done: {}".format(i))
                 continue
 
-            elif not i.done and i.start_time<=current_time:
+            elif not i.done and i.start_time<=current_time:#If not done and should have started
                 self.done = False
                 if not i.started:
                     i.started = True
@@ -59,6 +59,9 @@ class Script:
 
                 i.value = i.change_vector*(current_time-i.start_time)
                 #print(i)
+            elif not i.done: #Needed to wait for later instructions
+                self.done = False
+
 
 
 

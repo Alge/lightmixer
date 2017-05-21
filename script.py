@@ -1,18 +1,16 @@
 
 class Script:
 
-    universes = []
-    sizes = []
+    def __init__(self, repetitions = None):
+        self.universes = []
+        self.sizes = []
 
-    repetitions = 0
+        self.instructions = []
+        self.active_values = set()
+        self.done = False
 
-    instructions = []
-
-    active_values = set()
-
-    done = False
-
-    def __init__(self, repetitions):
+        if repetitions is None:
+            repetitions = 1
         self.repetitions = repetitions
 
     def addInstruction(self, instruction):
@@ -42,6 +40,7 @@ class Script:
     def runInstructions(self, current_time):
         self.done = True
         for i in self.instructions:
+
             if not i.done and i.stop_time<current_time: #If not done and should have stopped
                 i.done = True
                 i.value = i.color
@@ -49,18 +48,21 @@ class Script:
                 continue
 
             elif not i.done and i.start_time<=current_time:#If not done and should have started
+
                 self.done = False
                 if not i.started:
                     i.started = True
-                    i.color = i.color - self.universes[i.universe][i.channel]
-                    i.change_vector = i.color/(i.stop_time - i.start_time)
+                    i.change_vector = (i.color - self.universes[i.universe][i.channel])/(i.stop_time - i.start_time)
 
                     #print("Started instruction: {}".format(i))
 
                 i.value = i.change_vector*(current_time-i.start_time)
-                #print(i)
+                #print("running instruction {}".format(i))
             elif not i.done: #Needed to wait for later instructions
+                #print("{} not ready to start yet".format(i))
                 self.done = False
+            #elif i.done:
+            #    print("{} already done".format(i))
 
 
 
@@ -94,6 +96,8 @@ class Script:
         tstart = 99999999999999
         tstop = 0
 
+
+        #Find the duration of the script based on the instruction times
         for i in self.instructions:
 
             if i.start_time < tstart:
@@ -101,14 +105,21 @@ class Script:
 
             if i.stop_time > tstop:
                 tstop = i.stop_time
-
         t = tstop-tstart
 
+        #Reset the values in the instructions
         for i in self.instructions:
             i.done = False
             i.started = False
-            i.start_time += t
-            i.stop_time += t
+            new_start_time = i.start_time + t
+            new_stop_time = i.stop_time + t
+            i.change_vector = 0
+
+            #print("old start: {} new start: {} old stop: {} new stop:{}. diff: {}".format(i.start_time, new_start_time, i.stop_time, new_stop_time, i.start_time-i.stop_time))
+            i.start_time = new_start_time
+            i.stop_time = new_stop_time
+
+            i.value = 0
 
     def __str__(self):
      return "Script. Number of instructions: {}".format(len(self.instructions))

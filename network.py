@@ -2,10 +2,8 @@ import socket
 
 class Network:
 
-    instruction_buffer_size = 1000
-
     def __init__(self, instruction_port = 10000, instruction_IP = "127.0.0.1"):
-
+        self.instruction_buffer_size = 1000
         self.instruction_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.instruction_socket.bind(("127.0.0.1", 9000))
 

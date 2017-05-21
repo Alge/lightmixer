@@ -1,11 +1,6 @@
 import socket, struct
 
 class Client:
-
-    address = None
-    port = None
-    universe = None
-
     def __init__(self, address, port, universe):
         self.address = address
         self.port = port

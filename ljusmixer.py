@@ -5,21 +5,16 @@ from client import Client
 current_milli_time = lambda: int(round(time() * 1000))
 
 class Mixer:
-
-    universes = []
-    num_universes = 0;
-    universe_size = 0
-
-    clients = []
-
-    script_list = []
-
-    last_run_time = 0
-    current_time = 0
-    time_delta = 0
-
-
     def __init__(self, universes, universe_size = 513, fps = 60):
+
+        self.clients = []
+
+        self.script_list = []
+
+        self.last_run_time = 0
+        self.current_time = 0
+        self.time_delta = 0
+
         self.num_universes = universes
         self.universe_size = universe_size
         self.fps = fps
@@ -86,7 +81,7 @@ class Mixer:
             self.last_run_time = self.current_time
             self.current_time = current_milli_time()
             self.time_delta = self.current_time-self.last_run_time
-            print("Frames per second: {}".format(1/(self.time_delta/1000.0)))
+            #print("Frames per second: {}".format(1/(self.time_delta/1000.0)))
             #print(self.universes[0][:5])
 
             self.run_scripts()

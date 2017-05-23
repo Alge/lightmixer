@@ -11,17 +11,20 @@ class Instruction:
         self.started = False
         self.done = False
         self.value = 0
+        self.to_value = 0
 
     def __str__(self):
-     return "Instruction. Universe: {}, channel: {}, change vector: {}, color: {}, value: {}, started: {}, done: {}, start time: {}, stop time: {}".format(
+     return "Instruction. Universe: {}, channel: {}, change vector: {}, color: {}, value: {}, to_value: {}, started: {}, done: {}, start time: {}, stop time: {}, duration: {}".format(
              self.universe,
              self.channel,
              self.change_vector,
              self.color,
              self.value,
+             self.to_value,
              self.started,
              self.done,
              self.start_time,
-             self.stop_time
+             self.stop_time,
+             self.stop_time-self.start_time
      )
 
